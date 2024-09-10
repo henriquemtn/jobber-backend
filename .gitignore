@@ -1,0 +1,17 @@
+# Default Ignores
+/djangoapp/static/
+/djangoapp/media/
+/djangoapp/project/local_settings.py
+__localcode
+/data/
+
+__pycache__
+
+# Environments 
+.env 
+.venv 
+env/ 
+venv/ 
+ENV/ 
+env.bak/ 
+venv.bak/ 
