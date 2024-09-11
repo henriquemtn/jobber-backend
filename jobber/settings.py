@@ -12,7 +12,7 @@ DATA_DIR = BASE_DIR.parent / 'data' / 'web'
 SECRET_KEY = config('SECRET_KEY', 'change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production! - Se não houver
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
     h.strip() for h in config('ALLOWED_HOSTS', '').split(',')
@@ -46,9 +46,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
-]
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    ]
 
 ROOT_URLCONF = 'jobber.urls'
 
@@ -78,7 +77,7 @@ if ON_HEROKU:
     DATABASES = {
         'default': dj_database_url.config(default=config('DATABASE_URL'))
     }
-    DEBUG = 0
+    DEBUG = config('DEBUG', default=False, cast=bool)
 else:
     # Configurações específicas para o ambiente local
     DATABASES = {
