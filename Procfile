@@ -1,1 +1,1 @@
-web: commands.sh
+web: gunicorn jobber.wsgi:application --log-file
