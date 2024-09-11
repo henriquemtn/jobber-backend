@@ -14,6 +14,8 @@ SECRET_KEY = config('SECRET_KEY', 'change-me')
 # SECURITY WARNING: don't run with debug turned on in production! - Se não houver
 DEBUG = config('DEBUG', default=False, cast=bool)
 
+CORS_ALLOW_CREDENTIALS = True
+
 ALLOWED_HOSTS = [
     h.strip() for h in config('ALLOWED_HOSTS', '').split(',')
     if h.strip()
