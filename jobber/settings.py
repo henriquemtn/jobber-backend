@@ -78,7 +78,7 @@ if ON_HEROKU:
     DATABASES = {
         'default': dj_database_url.config(default=config('DATABASE_URL'))
     }
-    DEBUG = config('DEBUG', default=False, cast=bool)
+    DEBUG = False
 else:
     # Configurações específicas para o ambiente local
     DATABASES = {
