@@ -127,7 +127,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 # /data/web/static
-STATIC_ROOT = config(BASE_DIR, 'staticfiles')
+STATIC_ROOT = (BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 # /data/web/media
