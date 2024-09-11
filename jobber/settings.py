@@ -12,7 +12,7 @@ DATA_DIR = BASE_DIR.parent / 'data' / 'web'
 SECRET_KEY = config('SECRET_KEY', 'change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production! - Se não houver
-DEBUG = bool(int(config('DEBUG', 0)))
+DEBUG = False
 
 ALLOWED_HOSTS = [
     h.strip() for h in config('ALLOWED_HOSTS', '').split(',')
