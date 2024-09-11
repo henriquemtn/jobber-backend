@@ -1,26 +1,27 @@
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR.parent / 'data' / 'web'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'change-me')
+SECRET_KEY = config('SECRET_KEY', 'change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production! - Se não houver
-DEBUG = bool(int(os.getenv('DEBUG', 0)))
+DEBUG = bool(int(config('DEBUG', 0)))
 
 ALLOWED_HOSTS = [
-    h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',')
+    h.strip() for h in config('ALLOWED_HOSTS', '').split(',')
     if h.strip()
 ]
 
 # Configurações CORS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # URL do frontend
-]
-
+    h.strip() for h in config('CORS_ALLOWED_ORIGINS', '').split(',')
+    if h.strip()
+] 
 
 # Application definition
 
@@ -66,19 +67,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'jobber.wsgi.application'
 
+# Verifique se estamos no Heroku
+ON_HEROKU = 'DYNO' in os.environ
 
-# Databases - configuração do banco de dados
-
-DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE', 'change-me'),
-        'NAME': os.getenv('POSTGRES_DB', 'change-me'),
-        'USER': os.getenv('POSTGRES_USER', 'change-me'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'change-me'),
-        'HOST': os.getenv('POSTGRES_HOST', 'change-me'),
-        'PORT': os.getenv('POSTGRES_PORT', 'change-me'),
+if ON_HEROKU:
+    # Configurações específicas para o Heroku
+    DATABASES = {
+        'default': dj_database_url.config(default=config('DATABASE_URL'))
     }
-}
+    DEBUG = config('DEBUG', default=False, cast=bool)
+else:
+    # Configurações específicas para o ambiente local
+    DATABASES = {
+        'default': {
+            'ENGINE': config('DB_ENGINE'),
+            'NAME': config('POSTGRES_DB'),
+            'USER': config('POSTGRES_USER'),
+            'PASSWORD': config('POSTGRES_PASSWORD'),
+            'HOST': config('POSTGRES_HOST'),
+            'PORT': config('POSTGRES_PORT'),
+        }
+    }
 
 
 # Password validation
