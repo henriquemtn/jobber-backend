@@ -78,7 +78,7 @@ if ON_HEROKU:
     DATABASES = {
         'default': dj_database_url.config(default=config('DATABASE_URL'))
     }
-    DEBUG = False
+    DEBUG = 0
 else:
     # Configurações específicas para o ambiente local
     DATABASES = {
@@ -128,6 +128,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # /data/web/static
 STATIC_ROOT = (BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 # /data/web/media
