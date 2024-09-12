@@ -28,12 +28,34 @@ CORS_ALLOWED_ORIGINS = [
     if h.strip()
 ] 
 
-# Configurações da AWS S3
+# Configurações AWS S3
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', 'us-east-1')
+AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
+
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+AWS_DEFAULT_ACL = None  # Garantir que os arquivos tenham controle de acesso correto
+AWS_QUERYSTRING_AUTH = False  # Evita que o URL gerado contenha tokens de autenticação
+AWS_S3_VERITY = True  # Verificar se a configuração de verificação de SSL está ativa
+AWS_S3_FILE_OVERWRITE = False
+
+
+STORAGES = {
+
+    # Media file (image) management
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage"
+    },
+
+    # Staticfiles management
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage"
+    },
+}
+
+
 
 # Application definition
 
@@ -58,7 +80,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     ]
 
 ROOT_URLCONF = 'jobber.urls'
@@ -97,14 +120,7 @@ if ON_HEROKU:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 else:
-    # Usando static files
-    STATIC_URL = '/static/'
-    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-    
-    # Usar o armazenamento local para mídia em desenvolvimento
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = DATA_DIR / 'media'
-
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
     # Configurações específicas para o ambiente local
     DATABASES = {
         'default': {
